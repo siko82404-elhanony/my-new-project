@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مدرستي - المنهج المصري 2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+:root{--bg:#EAF6FF;--card:#fff;--ink:#1F2A44;--mut:#5b6785;--sun:#FFC93C;--mint:#2EC4B6;--coral:#FF6B6B;--line:#d6e4f2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111a2e;--card:#1b2742;--ink:#f1f5ff;--mut:#a3b1d1;--line:#2c3b5e}}
+:root[data-theme="dark"]{--bg:#111a2e;--card:#1b2742;--ink:#f1f5ff;--mut:#a3b1d1;--line:#2c3b5e}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{font-family:'Cairo',Tahoma,sans-serif;background:var(--bg);color:var(--ink);margin:0}
+#app{max-width:480px;margin:0 auto;min-height:100vh;padding:14px 16px 40px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:20px}
+.big{border-radius:22px;padding:18px;font-weight:800;text-align:center;cursor:pointer;border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);transition:transform .1s,box-shadow .1s;color:#1F2A44}
+.big:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
+.btn{background:var(--ink);color:var(--bg);border-radius:14px;padding:10px 18px;font-weight:700}
+.tab{flex:1;padding:8px 2px;font-size:12px;font-weight:700;border-radius:12px;color:var(--mut)}
+.tab.on{background:var(--sun);color:#1F2A44}
+:focus-visible{outline:3px solid var(--mint);outline-offset:2px}
+.screen{animation:in .25s ease}@keyframes in{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.screen{animation:none}}
+.exp{line-height:1.9;font-size:15px}.exp h3{font-weight:800;font-size:16px;margin:16px 0 4px}.exp h3:first-child{margin-top:0}.exp ul,.exp ol{padding-inline-start:20px;margin:4px 0}.exp ul{list-style:disc}.exp ol{list-style:decimal}.exp .ex{background:var(--bg);border:2px dashed var(--line);border-radius:14px;padding:10px 12px;margin:8px 0}
+.opt{display:block;width:100%;text-align:start;padding:12px;margin-top:8px;border:2px solid var(--line);border-radius:14px;font-weight:600}
+.opt.ok{background:#c9f5e4;border-color:#1f9d6b;color:#0b3d2a}.opt.no{background:#ffd9d9;border-color:#d64545;color:#5a1111}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ========= 1) CURRICULUM DATA (JSON schema – replace or import to update) =========
+ subjects[]: {id, ar, en, icon, color, tracks:["ar","lang"], units:[{t, summary[], explain, quiz:[{q,o[],a}], videos:[{t,url}]}]}
+ Sample content only – replace with the official 2027 curriculum via "استيراد منهج JSON". */
+const yt=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
+const U=(t,s,e,q,v)=>({t,summary:s,explain:e,quiz:q,videos:v.map(x=>({t:x,url:yt(x)}))});
+const CURRICULUM={version:"2027-sample",subjects:[
+{id:"math",ar:"الرياضيات",en:"Mathematics",icon:"➕",color:"#FFC93C",tracks:["ar","lang"],units:[
+ U("الوحدة الأولى: الأعداد",["العدد يتكون من آحاد وعشرات ومئات","نقارن الأعداد بالعلامات > < =","القيمة المكانية للرقم تحدد قيمته"],"نبدأ بقراءة الأعداد وكتابتها. كل رقم له مكان: الآحاد ثم العشرات ثم المئات. عند المقارنة نبدأ من أكبر مكان.",
+  [{q:"قيمة الرقم 5 في العدد 352 هي:",o:["5","50","500"],a:1},{q:"أي علامة صحيحة: 47 ... 74",o:[">","<","="],a:1},{q:"العدد الذي يلي 199 هو:",o:["198","200","210"],a:1}],["شرح الأعداد","مقارنة الأعداد"]),
+ U("الوحدة الثانية: الجمع والطرح",["الجمع يعني الضم","الطرح يعني الإنقاص","الجمع والطرح عكس بعضهما"],"نجمع الآحاد أولاً ثم العشرات. في الطرح نبدأ من الآحاد وقد نستلف من العشرات.",
+  [{q:"25 + 17 =",o:["32","42","41"],a:1},{q:"50 − 8 =",o:["42","48","58"],a:0}],["شرح الجمع","شرح الطرح"]),
+ U("الوحدة الثالثة: الأشكال الهندسية",["المربع له 4 أضلاع متساوية","المثلث له 3 أضلاع","الدائرة لا أضلاع لها"],"نتعرف على الأشكال من حولنا: النافذة مستطيل والعجلة دائرة.",
+  [{q:"عدد أضلاع المثلث:",o:["2","3","4"],a:1}],["الأشكال الهندسية"])]},
+{id:"ar",ar:"اللغة العربية",en:"Arabic",icon:"📖",color:"#FF6B6B",tracks:["ar","lang"],units:[
+ U("المحور الأول: أسرتي",["الأسرة أهم نعمة","نتعلم الجملة الاسمية والفعلية"],"نقرأ نص الأسرة ونتعلم الفرق بين الاسم والفعل والحرف.",
+  [{q:"كلمة «يكتب» هي:",o:["اسم","فعل","حرف"],a:1},{q:"مفرد «كتب» هو:",o:["كتاب","كاتب","مكتبة"],a:0}],["شرح درس أسرتي","الاسم والفعل"]),
+ U("المحور الثاني: وطني",["مصر بلدنا الغالي","نحب وطننا ونحافظ عليه"],"نقرأ نصاً عن حب الوطن ونستخرج الأفكار الرئيسية.",
+  [{q:"عاصمة مصر:",o:["الإسكندرية","القاهرة","أسوان"],a:1}],["درس وطني"])]},
+{id:"sci",ar:"العلوم",en:"Science",icon:"🔬",color:"#2EC4B6",tracks:["ar","lang"],units:[
+ U("الوحدة الأولى: الكائنات الحية",["الكائن الحي يتنفس ويتغذى وينمو","النبات والحيوان والإنسان كائنات حية"],"الكائنات الحية تحتاج الماء والهواء والغذاء.",
+  [{q:"أي مما يلي كائن حي؟",o:["حجر","شجرة","كرسي"],a:1}],["الكائنات الحية"]),
+ U("الوحدة الثانية: المادة",["المادة لها كتلة وتشغل حيزاً","حالاتها صلبة وسائلة وغازية"],"الماء سائل، والثلج صلب، والبخار غاز.",
+  [{q:"الثلج حالة:",o:["صلبة","سائلة","غازية"],a:0}],["حالات المادة"])]},
+{id:"en",ar:"اللغة الإنجليزية",en:"English",icon:"🔤",color:"#8E7DFF",tracks:["lang"],units:[
+ U("Unit 1: My Family",["mother, father, sister, brother","This is my ..."],"We learn family words and simple sentences like: This is my mother.",
+  [{q:"Mother means:",o:["أب","أم","أخ"],a:1},{q:"This is my ___ (أخي)",o:["brother","sister","father"],a:0}],["My Family song","Family vocabulary"]),
+ U("Unit 2: My School",["pencil, book, bag, teacher"],"We name school things and use: I have a book.",
+  [{q:"Book means:",o:["كتاب","قلم","حقيبة"],a:0}],["School vocabulary"])]},
+{id:"ict",ar:"تكنولوجيا المعلومات",en:"ICT",icon:"💻",color:"#4EA8DE",tracks:["ar","lang"],units:[
+ U("الوحدة الأولى: الحاسوب",["الحاسوب جهاز يعالج المعلومات","الشاشة والفأرة ولوحة المفاتيح"],"نتعرف على أجزاء الحاسوب وطريقة استخدامه بأمان.",
+  [{q:"أداة الإدخال هي:",o:["الشاشة","لوحة المفاتيح","السماعة"],a:1}],["أجزاء الحاسوب"])]},
+{id:"disc",ar:"المكتشف",en:"Discover",icon:"🧭",color:"#FF9F5A",tracks:["ar","lang"],units:[
+ U("المحور الأول: اكتشف حولك",["نلاحظ ونسأل ونجرب","نتعلم من المشروعات"],"نكتشف بيئتنا من خلال أنشطة ومشروعات صغيرة.",
+  [{q:"أول خطوة في الاكتشاف:",o:["الملاحظة","النوم","اللعب فقط"],a:0}],["اكتشف بيئتك"])]},
+{id:"val",ar:"القيم والاحترام",en:"Values & Respect",icon:"🤝",color:"#7BD389",tracks:["ar","lang"],units:[
+ U("المحور الأول: احترام الآخر",["نحترم اختلاف الآخرين","نستمع قبل أن نتحدث"],"الاحترام يعني أن نعامل غيرنا كما نحب أن يعاملونا.",
+  [{q:"من سلوكيات الاحترام:",o:["السخرية","الاستماع","المقاطعة"],a:1}],["قيمة الاحترام"])]}
+]};
+/* ===== Math - Grade 4 - Term 1 - Languages (unit titles follow the 2026/2027 MoE book; explanations & questions are authored by the assistant - please review) ===== */
+const M4=(t,s,e,q,v)=>({...U(t,s,e,q.map(([a,b,c])=>({q:a,o:b,a:c})),v),g:4,tm:1,tr:"lang",l:"en"});
+CURRICULUM.subjects.find(s=>s.id=="math").units.push(
+M4("Unit 1: Place Value",
+ ["Read and write numbers up to millions (ones, tens, hundreds, thousands, ten thousands, hundred thousands, millions)","Value of a digit = the digit x the value of its place","Standard form, word form and expanded form name the same number","To compare, start from the greatest place value"],
+ "Every three digits from the right form a period (ones, thousands, millions) separated by commas. Example: 345,212 = 300,000 + 40,000 + 5,000 + 200 + 10 + 2. Each place is 10 times the place to its right.",
+ [["The value of the digit 7 in 4,372,150 is:",["7,000","70,000","700,000"],1],["Standard form of: three hundred forty-five thousand, two hundred twelve",["345,212","354,212","345,122"],0],["58,430 ... 58,340",[">","<","="],0],["600,000 + 4,000 + 50 =",["604,050","640,050","604,500"],0]],
+ ["grade 4 math place value","grade 4 read and write large numbers"]),
+M4("Unit 2: Addition and Subtraction Strategies",
+ ["Add and subtract large numbers with the standard algorithm, regrouping when needed","Rounding helps estimate and check if an answer is reasonable","Bar models and variables help represent word problems","Multi-step problems are solved one step at a time"],
+ "In addition, start from the ones and regroup when a place reaches 10. In subtraction, regroup from the next greater place when needed. For word problems, draw a bar model, use a letter for the unknown, solve, then check with the inverse operation.",
+ [["4,500 + 3,700 =",["7,200","8,200","8,000"],1],["10,000 - 3,456 =",["6,544","7,544","6,654"],0],["Round to the nearest thousand: 3,892 + 2,108 is about",["5,000","6,000","7,000"],1],["Ahmed buys a book for 125 EGP and a pen for 35 EGP. He has 200 EGP. How much is left?",["40 EGP","50 EGP","60 EGP"],0]],
+ ["grade 4 addition subtraction strategies","grade 4 bar models word problems"]),
+M4("Unit 3: Measurement Concepts",
+ ["Length: 1 km = 1,000 m, 1 m = 100 cm, 1 cm = 10 mm","Mass: 1 kg = 1,000 g","Capacity: 1 L = 1,000 mL","Time: 1 hour = 60 minutes; elapsed time = end time - start time"],
+ "To convert from a larger unit to a smaller unit, multiply. From a smaller unit to a larger one, divide. Example: 3 m = 3 x 100 = 300 cm. For elapsed time, count from the start time to the end time in hours, then minutes.",
+ [["1 kg = ... g",["100","1,000","10,000"],1],["3 m = ... cm",["30","300","3,000"],1],["2 L = ... mL",["200","2,000","20"],1],["A lesson starts at 9:15 and ends at 10:00. The elapsed time is ... minutes",["35","45","55"],1]],
+ ["grade 4 measurement units","grade 4 elapsed time"]),
+M4("Unit 4: Area and Perimeter",
+ ["Perimeter = sum of all side lengths","Perimeter of a square = 4 x side","Perimeter of a rectangle = 2 x (length + width)","Area of a rectangle = length x width (in square units like cm2)"],
+ "Perimeter is the distance around a shape and is measured in length units. Area is the number of square units that cover a shape. If the area and one side are known, divide to find the other side.",
+ [["Perimeter of a square with side 6 cm =",["12 cm","24 cm","36 cm"],1],["Area of a rectangle 8 cm by 5 cm =",["26 cm2","40 cm2","13 cm2"],1],["Perimeter of a rectangle 9 cm by 4 cm =",["13 cm","26 cm","36 cm"],1],["A rectangle has area 36 cm2 and width 4 cm. Its length =",["9 cm","32 cm","40 cm"],0]],
+ ["grade 4 area and perimeter","grade 4 perimeter of rectangle"]),
+M4("Unit 5: Multiplication as a Relationship",
+ ["Multiplication can compare: 'A is 5 times as many as B' means A = 5 x B","Commutative property: 7 x 4 = 4 x 7","Any number x 1 = the number; any number x 0 = 0","Bar models help solve multiplicative comparison problems"],
+ "If Sara has 4 pencils and Mona has 3 times as many, Mona has 4 x 3 = 12 pencils. To find an unknown, use multiplication or its inverse, division.",
+ [["5 times as many as 6 is:",["11","30","65"],1],["24 is 3 times as many as:",["8","21","72"],0],["7 x 4 = 4 x 7 shows the:",["commutative property","associative property","zero property"],0],["Ahmed has 9 marbles. Ali has 4 times as many. Ali has:",["13","36","32"],1]],
+ ["grade 4 multiplication as comparison","grade 4 multiplicative comparison"]),
+M4("Unit 6: Factors and Multiples",
+ ["A factor divides a number with no remainder","A multiple is the product of a number and 1, 2, 3, ...","A prime number has exactly two factors (1 and itself): 2, 3, 5, 7, 11","A composite number has more than two factors, like 12"],
+ "The factors of 12 are 1, 2, 3, 4, 6 and 12. The multiples of 6 are 6, 12, 18, 24, ... To find factors, look for pairs of numbers whose product is the number.",
+ [["Which is NOT a factor of 12?",["4","5","6"],1],["The 4th multiple of 6 is:",["18","24","36"],1],["Which number is prime?",["9","11","15"],1],["The number of factors of 10 is:",["2","4","5"],1]],
+ ["grade 4 factors and multiples","grade 4 prime and composite numbers"]),
+M4("Unit 7: Multiplication and Division: Computation and Relationships",
+ ["Multiply a 2-digit number by a 1-digit or 2-digit number using the algorithm or partial products","Divide by a 1-digit number, including remainders","Multiplication and division are inverse operations","The remainder is always less than the divisor"],
+ "To find 23 x 4: 3 x 4 = 12 and 20 x 4 = 80, so 12 + 80 = 92. For 47 / 5 = 9 remainder 2, because 5 x 9 = 45 and 47 - 45 = 2. Always check with multiplication.",
+ [["23 x 4 =",["82","92","96"],1],["14 x 12 =",["148","168","158"],1],["96 / 4 =",["24","23","26"],0],["The remainder of 47 / 5 is:",["1","2","3"],1]],
+ ["grade 4 multiply two digit numbers","grade 4 division with remainders"]),
+M4("Unit 8: Order of Operations",
+ ["First, calculate inside parentheses","Then multiplication and division from left to right","Finally, addition and subtraction from left to right","Moving the parentheses can change the answer"],
+ "In 5 + 3 x 4, multiply first: 3 x 4 = 12, then add: 5 + 12 = 17. In (5 + 3) x 4, do the parentheses first: 8 x 4 = 32.",
+ [["5 + 3 x 4 =",["32","17","12"],1],["(5 + 3) x 4 =",["32","17","23"],0],["20 - 6 / 2 =",["7","17","10"],1],["18 / (2 + 1) x 4 =",["24","6","18"],0]],
+ ["grade 4 order of operations","grade 4 parentheses order of operations"])
+);
+
+/* ===== Detailed explanations (HTML) ===== */
+const EXP4=[
+`<h3>1. The place value chart</h3><p>Our number system is based on 10. Each place is worth <b>10 times</b> the place on its right. Digits are grouped in periods of three, separated by commas: the <b>ones period</b> (ones, tens, hundreds), the <b>thousands period</b> and the <b>millions period</b>.</p>
+<div class="ex"><b>Example: 4,372,150</b><ul><li>4 → millions = 4,000,000</li><li>3 → hundred thousands = 300,000</li><li>7 → ten thousands = 70,000</li><li>2 → thousands = 2,000</li><li>1 → hundreds = 100</li><li>5 → tens = 50</li><li>0 → ones = 0 (the zero is a place holder)</li></ul></div>
+<h3>2. Three ways to write a number</h3><ul><li><b>Standard form:</b> 4,372,150</li><li><b>Word form:</b> four million, three hundred seventy-two thousand, one hundred fifty</li><li><b>Expanded form:</b> 4,000,000 + 300,000 + 70,000 + 2,000 + 100 + 50</li></ul><p>To read a number, read each period from the left and say the period name (million, thousand), but never say the name "ones".</p>
+<h3>3. Digit versus value</h3><p>The <b>digit</b> is the symbol; the <b>value</b> is digit × place. In 4,372,150 the digit 7 is worth 70,000 because it sits in the ten-thousands place. In 7,000 the same digit is worth ten times less than 70,000.</p>
+<h3>4. Comparing and ordering</h3><ol><li>Line the numbers up by place.</li><li>Start from the greatest place and move right.</li><li>The first place where the digits differ decides.</li></ol><div class="ex">Compare 58,430 and 58,340. Ten thousands: 5 = 5. Thousands: 8 = 8. Hundreds: 4 &gt; 3. So <b>58,430 &gt; 58,340</b>.</div><p>To order numbers, compare them two at a time, then write them from least to greatest (or the opposite).</p>
+<h3>5. Common mistakes</h3><ul><li>Forgetting the zero place holder: 604,050 is not 64,050.</li><li>Choosing the number with more non-zero digits as the greater one. A number with more digits is greater (if no leading zero).</li><li>Saying "and" inside the number when reading whole numbers.</li></ul>`,
+`<h3>1. Adding with the standard algorithm</h3><p>Write the numbers one under the other with the places lined up. Add from the <b>ones</b> to the left. When a place reaches 10 or more, write the ones digit and <b>regroup</b> (carry) 1 to the next place.</p>
+<div class="ex"><b>48,675 + 27,358</b><ul><li>Ones: 5 + 8 = 13 → write 3, carry 1</li><li>Tens: 7 + 5 + 1 = 13 → write 3, carry 1</li><li>Hundreds: 6 + 3 + 1 = 10 → write 0, carry 1</li><li>Thousands: 8 + 7 + 1 = 16 → write 6, carry 1</li><li>Ten thousands: 4 + 2 + 1 = 7</li></ul>Answer: <b>76,033</b></div>
+<h3>2. Subtracting with regrouping</h3><p>Subtract from the ones. If the top digit is smaller, regroup 1 from the next place (it becomes 10 in this place).</p>
+<div class="ex"><b>50,000 − 23,478</b>: there are zeros, so regroup is long. Trick: subtract 1 from the top (49,999), subtract normally (49,999 − 23,478 = 26,521), then add the 1 back: <b>26,522</b>.</div><p><b>Check:</b> addition and subtraction are inverse operations. 23,478 + 26,522 = 50,000 ✓.</p>
+<h3>3. Estimating to check</h3><p>Round each number, then compute. 48,675 + 27,358 → 49,000 + 27,000 = 76,000, which is close to 76,033, so the answer is reasonable.</p>
+<h3>4. Mental strategies</h3><ul><li><b>Compensation:</b> 598 + 247 = 600 + 247 − 2 = 845.</li><li><b>Breaking apart:</b> 345 + 128 = 345 + 100 + 28 = 473.</li><li><b>Making tens/hundreds:</b> 96 + 38 = 100 + 34 = 134.</li></ul>
+<h3>5. Word problems with bar models</h3><p>A bar model shows parts and the whole. Use a letter (a variable) for the unknown.</p><div class="ex">A shop has 1,250 notebooks. It sells 480 on Sunday and 365 on Monday. How many are left?<br>Step 1: 480 + 365 = 845 sold.<br>Step 2: 1,250 − 845 = <b>405</b> left (n = 405).</div><p>Read the problem, find what is asked, plan the steps, solve, then check that the answer makes sense.</p>`,
+`<h3>1. Units of length</h3><p>1 km = 1,000 m &nbsp;|&nbsp; 1 m = 100 cm &nbsp;|&nbsp; 1 cm = 10 mm. Use a ruler or a tape measure.</p>
+<h3>2. Mass and capacity</h3><p>Mass (how heavy): 1 kg = 1,000 g, measured with a scale. Capacity (how much a container holds): 1 L = 1,000 mL, measured with a measuring cup.</p>
+<h3>3. Converting units</h3><ul><li>Big unit → small unit: <b>multiply</b>.</li><li>Small unit → big unit: <b>divide</b>.</li></ul><div class="ex">5 km = 5 × 1,000 = 5,000 m<br>2,500 g = 2 kg 500 g<br>3 L 250 mL = 3 × 1,000 + 250 = 3,250 mL<br>4 hours = 4 × 60 = 240 minutes</div>
+<h3>4. Units of time</h3><p>1 hour = 60 minutes, 1 minute = 60 seconds, 1 day = 24 hours, 1 week = 7 days. Remember A.M. (midnight to noon) and P.M. (noon to midnight).</p>
+<h3>5. Elapsed time</h3><p>Elapsed time is how much time passes between a start and an end. Jump to the next full hour, then add whole hours, then the remaining minutes.</p><div class="ex">8:45 to 11:20<br>8:45 → 9:00 = 15 min<br>9:00 → 11:00 = 2 h<br>11:00 → 11:20 = 20 min<br>Total = <b>2 h 35 min</b></div>
+<h3>6. Word problems with measurement</h3><div class="ex"><b>Add:</b> 2 m 60 cm + 1 m 70 cm = 3 m 130 cm = <b>4 m 30 cm</b>.<br><b>Multiply:</b> 8 bottles × 250 mL = 2,000 mL = <b>2 L</b>.<br><b>Divide:</b> 3 kg of rice shared equally in 6 bags: 3,000 g ÷ 6 = <b>500 g</b> per bag.</div><p>Tip: always convert to the same unit before adding or subtracting.</p>`,
+`<h3>1. Perimeter</h3><p>The perimeter is the distance <b>around</b> a shape. It is measured in length units (cm, m).</p><ul><li>Any polygon: add all the sides.</li><li>Square: P = 4 × side.</li><li>Rectangle: P = 2 × (length + width).</li></ul><div class="ex">Rectangle 12 cm × 7 cm: P = 2 × (12 + 7) = <b>38 cm</b>.<br>Square with side 9 m: P = 4 × 9 = <b>36 m</b>.</div>
+<h3>2. Area</h3><p>Area is the number of unit squares that cover a surface. It is measured in <b>square units</b> (cm², m²).</p><ul><li>Rectangle: A = length × width.</li><li>Square: A = side × side.</li></ul><div class="ex">Rectangle 9 cm × 6 cm: A = 9 × 6 = <b>54 cm²</b>.</div>
+<h3>3. Finding a missing side</h3><div class="ex"><b>From perimeter:</b> a rectangle has P = 30 cm and length 9 cm. Half the perimeter = 15 = length + width, so width = 15 − 9 = <b>6 cm</b>.<br><b>From area:</b> A = 72 m² and width 8 m. Length = 72 ÷ 8 = <b>9 m</b>.</div>
+<h3>4. Composite (L-shaped) figures</h3><p>Split the shape into rectangles, find each area, then add. Example: a 10 × 4 rectangle plus a 3 × 5 rectangle: 40 + 15 = <b>55 square units</b>. For perimeter, add the outside sides only.</p>
+<h3>5. Same perimeter, different area</h3><p>A 8 × 2 rectangle and a 5 × 5 square both have perimeter 20, but their areas are 16 and 25. The more "square" the shape is, the larger the area.</p>
+<h3>6. Common mistakes</h3><ul><li>Writing cm instead of cm² for area.</li><li>Adding only two sides of a rectangle for the perimeter.</li><li>Mixing units: convert first (cm and m).</li></ul>`,
+`<h3>1. Two kinds of comparison</h3><p>"6 <b>more</b> than" is <b>additive</b> (use + or −). "6 <b>times as many</b> as" is <b>multiplicative</b> (use × or ÷).</p><div class="ex">3 and 12: 12 is 9 more than 3 (additive), and 12 is 4 times as many as 3 (multiplicative).</div>
+<h3>2. Multiplication comparison statements</h3><p>"A is 5 times as many as B" means <b>A = 5 × B</b>. B is the small amount (one bar), A is five equal bars.</p><div class="ex">A red ribbon is 8 m. The blue ribbon is 5 times as long: 5 × 8 = <b>40 m</b>.</div>
+<h3>3. Finding the smaller amount</h3><p>Use division, the inverse operation. Write an equation with a variable.</p><div class="ex">A green ribbon is 36 m, which is 4 times as long as the yellow ribbon. 4 × n = 36, so n = 36 ÷ 4 = <b>9 m</b>.</div>
+<h3>4. Properties of multiplication</h3><ul><li><b>Commutative:</b> 7 × 4 = 4 × 7.</li><li><b>Associative:</b> (2 × 3) × 4 = 2 × (3 × 4) = 24.</li><li><b>Distributive:</b> 6 × 7 = 6 × (5 + 2) = 30 + 12 = 42.</li><li><b>Identity:</b> n × 1 = n.</li><li><b>Zero:</b> n × 0 = 0.</li></ul>
+<h3>5. Patterns</h3><p>Multiples of 5 end in 0 or 5. Multiples of 10 end in 0. When you multiply by 10, each digit moves one place to the left.</p>
+<h3>6. Solving a word problem</h3><div class="ex">Ahmed has 9 marbles. Ali has 4 times as many. How many does Ali have?<br>Draw 1 bar for Ahmed (9) and 4 equal bars for Ali. 4 × 9 = <b>36</b>.</div>`,
+`<h3>1. Factors</h3><p>A factor of a number divides it with <b>no remainder</b>. Find factors in pairs whose product is the number.</p><div class="ex"><b>Factors of 36:</b> 1 × 36, 2 × 18, 3 × 12, 4 × 9, 6 × 6 → 1, 2, 3, 4, 6, 9, 12, 18, 36.</div><p>Every number has 1 and itself as factors.</p>
+<h3>2. Divisibility rules</h3><ul><li>By 2: last digit is even.</li><li>By 5: last digit is 0 or 5.</li><li>By 10: last digit is 0.</li><li>By 3: the digit sum is divisible by 3.</li><li>By 9: the digit sum is divisible by 9.</li></ul><div class="ex">4,725: digit sum 4 + 7 + 2 + 5 = 18, so it is divisible by 3 and 9; it ends in 5, so by 5 too. Check: 4,725 ÷ 9 = 525.</div>
+<h3>3. Multiples</h3><p>Multiples are the products of a number and 1, 2, 3, … The multiples of 7: 7, 14, 21, 28, 35, … They go on forever.</p>
+<h3>4. Common factors and common multiples</h3><div class="ex">Multiples of 4: 4, 8, 12, 16, 20, 24<br>Multiples of 6: 6, 12, 18, 24<br>Common multiples: 12, 24 (the least is <b>12</b>).<br>Factors of 12: 1, 2, 3, 4, 6, 12; factors of 18: 1, 2, 3, 6, 9, 18. Common factors: 1, 2, 3, 6 (the greatest is <b>6</b>).</div>
+<h3>5. Prime and composite numbers</h3><ul><li><b>Prime:</b> exactly 2 factors (1 and itself): 2, 3, 5, 7, 11, 13.</li><li><b>Composite:</b> more than 2 factors: 4, 9, 12, 51.</li><li>The number 1 is neither prime nor composite.</li><li>2 is the only even prime.</li></ul><div class="ex">Is 51 prime? Digit sum = 6, so 3 divides it: 51 = 3 × 17. It is composite.</div>`,
+`<h3>1. Multiplying by a 1-digit number</h3><p>Break the number into places (partial products) and add.</p><div class="ex">407 × 6: 400 × 6 = 2,400 and 7 × 6 = 42. Total = <b>2,442</b>.</div>
+<h3>2. Multiplying 2-digit × 2-digit</h3><div class="ex"><b>36 × 24</b><br><u>Partial products:</u> 36 × 4 = 144; 36 × 20 = 720; 144 + 720 = <b>864</b>.<br><u>Area model:</u> (30 + 6) × (20 + 4) = 600 + 120 + 120 + 24 = <b>864</b>.</div><p>Estimate first: 36 × 24 ≈ 40 × 20 = 800. Close to 864 ✓. Remember the zero placeholder when multiplying by the tens digit.</p>
+<h3>3. Dividing by a 1-digit number</h3><p>Divide, multiply, subtract, bring down — repeat.</p><div class="ex"><b>3,456 ÷ 4</b><br>34 ÷ 4 = 8 (8 × 4 = 32, remainder 2)<br>Bring down 5: 25 ÷ 4 = 6 (24, remainder 1)<br>Bring down 6: 16 ÷ 4 = 4<br>Answer: <b>864</b>. Check: 864 × 4 = 3,456 ✓.</div>
+<h3>4. Division with a remainder</h3><div class="ex"><b>859 ÷ 6:</b> 8 ÷ 6 = 1 r 2; 25 ÷ 6 = 4 r 1; 19 ÷ 6 = 3 r 1. Answer: <b>143 remainder 1</b>. Check: 143 × 6 + 1 = 859 ✓.</div><p>The remainder is always smaller than the divisor.</p>
+<h3>5. What to do with the remainder</h3><div class="ex">43 chairs, 5 chairs per row. 43 ÷ 5 = 8 r 3. We need <b>9 rows</b> (round up so everyone has a seat). But if the question asks "how many full rows?" the answer is 8.</div>
+<h3>6. Multiplication and division are inverses</h3><p>If 12 × 7 = 84, then 84 ÷ 7 = 12 and 84 ÷ 12 = 7. Use this to check your work.</p>`,
+`<h3>1. Why we need rules</h3><p>Without agreed rules, 5 + 3 × 4 could be 32 or 17. Mathematicians agreed on one order so everyone gets the same answer.</p>
+<h3>2. The order</h3><ol><li><b>Parentheses</b> first.</li><li><b>Multiplication and division</b>, from left to right.</li><li><b>Addition and subtraction</b>, from left to right.</li></ol>
+<h3>3. Worked examples</h3><div class="ex">5 + 3 × 4 → 5 + 12 = <b>17</b><br>(5 + 3) × 4 → 8 × 4 = <b>32</b><br>48 ÷ 6 × 2 → 8 × 2 = <b>16</b> (left to right, not 48 ÷ 12)<br>30 − 12 + 5 → 18 + 5 = <b>23</b><br>7 + (12 − 4) × 3 → 7 + 8 × 3 → 7 + 24 = <b>31</b></div>
+<h3>4. Writing expressions from words</h3><div class="ex">"Add 6 and 4, then multiply by 3" → (6 + 4) × 3 = <b>30</b>.<br>"Multiply 6 by 3, then add 4" → 6 × 3 + 4 = <b>22</b>.</div>
+<h3>5. Parentheses change the answer</h3><p>2 + 3 × 4 = 14 but (2 + 3) × 4 = 20. Always look for parentheses first.</p>
+<h3>6. Common mistakes</h3><ul><li>Always working strictly left to right.</li><li>Adding before multiplying.</li><li>Doing division after multiplication when division comes first on the left.</li></ul>`
+];
+CURRICULUM.subjects.find(s=>s.id=="math").units.filter(u=>u.g==4).forEach((u,i)=>u.explain=EXP4[i]);
+
+/* ===== Extra solved practice ===== */
+const X=(...a)=>'<h3>Solved Practice</h3>'+a.map((e,i)=>`<div class="ex"><b>Exercise ${i+1}.</b> ${e[0]}<br><b>Solution:</b> ${e[1]}</div>`).join("");
+const EXTRA4=[
+X(["Write 2,058,306 in word form and expanded form.","Millions: 2. Hundred thousands: 0. Ten thousands: 5. Thousands: 8. Hundreds: 3. Tens: 0. Ones: 6.<br>Word form: two million, fifty-eight thousand, three hundred six.<br>Expanded: 2,000,000 + 50,000 + 8,000 + 300 + 6."],
+["Order from least to greatest: 705,090 &nbsp; 750,009 &nbsp; 705,900","All have 7 hundred thousands. Ten thousands: 0, 5, 0 → 750,009 is greatest. Compare 705,090 and 705,900: thousands 5 = 5, hundreds 0 &lt; 9.<br>Order: <b>705,090 &lt; 705,900 &lt; 750,009</b>."],
+["Find 10 more, 100 more, 1,000 more and 10,000 less than 45,380.","10 more: 45,390. 100 more: 45,480. 1,000 more: 46,380. 10,000 less: <b>35,380</b>. Only one digit changes each time."],
+["Round 4,372,150 to the nearest hundred thousand.","The hundred-thousands digit is 3. Look at the next digit (ten thousands): 7 ≥ 5, so round up → <b>4,400,000</b>."]),
+X(["Subtract: 7,003 − 2,458","Regroup through the zeros: 7,003 becomes 6 thousands, 9 hundreds, 9 tens, 13 ones.<br>Ones 13 − 8 = 5; tens 9 − 5 = 4; hundreds 9 − 4 = 5; thousands 6 − 2 = 4 → <b>4,545</b>. Check: 4,545 + 2,458 = 7,003 ✓."],
+["Add: 12,450 + 8,375 + 3,980","12,450 + 8,375 = 20,825. Then 20,825 + 3,980 = <b>24,805</b>. Estimate: 12,000 + 8,000 + 4,000 = 24,000 ✓."],
+["A library has 5,000 books: 1,260 Arabic, 1,875 English, the rest are other languages. How many other books?","Step 1: 1,260 + 1,875 = 3,135. Step 2: 5,000 − 3,135 = <b>1,865</b> books."],
+["Solve with a variable: n + 2,350 = 6,000","Use the inverse operation: n = 6,000 − 2,350 = <b>3,650</b>. Check: 3,650 + 2,350 = 6,000 ✓."]),
+X(["Convert 4 m 35 cm to centimeters.","4 m = 4 × 100 = 400 cm. 400 + 35 = <b>435 cm</b>."],
+["Subtract: 5 kg 200 g − 2 kg 750 g","Convert to grams: 5,200 − 2,750 = 2,450 g = <b>2 kg 450 g</b>."],
+["A film starts at 6:40 P.M. and lasts 1 h 50 min. When does it end?","6:40 + 1 h = 7:40. 7:40 + 50 min = 7:40 + 20 min (8:00) + 30 min = <b>8:30 P.M.</b>"],
+["A jug holds 3 L. How many 250 mL glasses can it fill?","3 L = 3,000 mL. 3,000 ÷ 250 = <b>12 glasses</b>."],
+["A 12 m rope is cut into pieces of 150 cm. How many pieces?","12 m = 1,200 cm. 1,200 ÷ 150 = <b>8 pieces</b>."]),
+X(["A garden is 15 m by 8 m. Fencing costs 20 EGP per meter. What is the cost of fencing all around it?","P = 2 × (15 + 8) = 46 m. Cost = 46 × 20 = <b>920 EGP</b>."],
+["A room floor is 6 m by 4 m. Each tile covers 2 m². How many tiles are needed?","Area = 6 × 4 = 24 m². Tiles = 24 ÷ 2 = <b>12 tiles</b>."],
+["A square has perimeter 48 cm. Find its area.","Side = 48 ÷ 4 = 12 cm. Area = 12 × 12 = <b>144 cm²</b>."],
+["Find the area of a 9 × 7 rectangle with a 4 × 3 rectangle cut from one corner.","Whole: 9 × 7 = 63. Cut-out: 4 × 3 = 12. Area = 63 − 12 = <b>51 square units</b>."]),
+X(["A pen costs 7 EGP. A notebook costs 6 times as much. What do both cost together?","Notebook: 6 × 7 = 42 EGP. Together: 7 + 42 = <b>49 EGP</b>."],
+["Mona has 48 stickers, which is 6 times as many as Nada. How many does Nada have?","6 × n = 48 → n = 48 ÷ 6 = <b>8 stickers</b>."],
+["56 is how many times as many as 7?","7 × ? = 56 → 56 ÷ 7 = <b>8 times</b>."],
+["Tom has 5 cards. Sam has 3 times as many as Tom. Lina has 4 more than Sam. How many does Lina have?","Sam: 3 × 5 = 15. Lina: 15 + 4 = <b>19 cards</b> (first multiplicative, then additive)."],
+["Calculate 8 × 13 using the distributive property.","8 × 13 = 8 × (10 + 3) = 80 + 24 = <b>104</b>."]),
+X(["List all factors of 48.","Pairs: 1 × 48, 2 × 24, 3 × 16, 4 × 12, 6 × 8. Factors: <b>1, 2, 3, 4, 6, 8, 12, 16, 24, 48</b> (10 factors)."],
+["Is 135 divisible by 2, 3, 5 and 9?","Digit sum = 1 + 3 + 5 = 9 → divisible by 3 and 9. Ends in 5 → divisible by 5. Last digit odd → <b>not</b> divisible by 2."],
+["Two buses leave a station at 8:00. One leaves every 10 min, the other every 15 min. When do they leave together again?","Multiples of 10: 10, 20, 30. Multiples of 15: 15, 30. The least common multiple is 30 → <b>8:30</b>."],
+["List the prime numbers between 20 and 40.","Test each: 21 = 3 × 7, 25 = 5 × 5, 27 = 3 × 9, 33 = 3 × 11, 35 = 5 × 7, 39 = 3 × 13. Primes: <b>23, 29, 31, 37</b>."],
+["24 pens and 36 notebooks are put into identical packs with nothing left over. What is the greatest number of packs?","Factors of 24: 1, 2, 3, 4, 6, 8, 12, 24. Factors of 36: 1, 2, 3, 4, 6, 9, 12, 18, 36. Greatest common factor = <b>12 packs</b>."]),
+X(["Multiply: 52 × 38","52 × 8 = 416. 52 × 30 = 1,560. 416 + 1,560 = <b>1,976</b>. Estimate: 50 × 40 = 2,000 ✓."],
+["Divide: 2,184 ÷ 6","21 ÷ 6 = 3 r 3 (18). Bring down 8: 38 ÷ 6 = 6 r 2 (36). Bring down 4: 24 ÷ 6 = 4. Answer: <b>364</b>. Check: 364 × 6 = 2,184 ✓."],
+["Divide: 7,035 ÷ 5","7 ÷ 5 = 1 r 2. Bring down 0: 20 ÷ 5 = 4. Bring down 3: 3 ÷ 5 = 0 r 3 (write 0 in the quotient!). Bring down 5: 35 ÷ 5 = 7. Answer: <b>1,407</b>."],
+["A box holds 24 packs of 12 pencils. The pencils are shared equally among 9 classes. How many does each class get?","Total: 24 × 12 = 288. Each class: 288 ÷ 9 = <b>32 pencils</b>."],
+["You have 100 EGP. A ticket costs 15 EGP. How many tickets can you buy and how much is left?","100 ÷ 15 = 6 r 10 → <b>6 tickets</b>, <b>10 EGP</b> left."]),
+X(["Evaluate: 36 ÷ (4 + 2) × 3 − 5","Parentheses: 4 + 2 = 6. Then left to right: 36 ÷ 6 = 6; 6 × 3 = 18; 18 − 5 = <b>13</b>."],
+["Evaluate: 15 + 4 × (10 − 6) ÷ 2","Parentheses: 10 − 6 = 4. Then 4 × 4 = 16; 16 ÷ 2 = 8; 15 + 8 = <b>23</b>."],
+["Sara buys 3 notebooks at 12 EGP and 2 pens at 5 EGP and pays 50 EGP. How much change?","Expression: 50 − (3 × 12 + 2 × 5) = 50 − (36 + 10) = 50 − 46 = <b>4 EGP</b>."],
+["Insert parentheses to make this true: 8 + 4 × 2 = 24","Try (8 + 4) × 2 = 12 × 2 = 24 ✓. Answer: <b>(8 + 4) × 2 = 24</b>."],
+["Find the mistake: 20 − 4 × 3 = 48","The student subtracted first (16 × 3 = 48). Multiply first: 4 × 3 = 12, then 20 − 12 = <b>8</b>."])
+];
+CURRICULUM.subjects.find(s=>s.id=="math").units.filter(u=>u.g==4).forEach((u,i)=>u.explain+=EXTRA4[i]);
+let DATA=CURRICULUM;
+
+/* ========= 2) STATE (LocalStorage) ========= */
+const K="egy_app_v1";
+let S={user:null,grade:null,term:null,track:null,subject:null,unit:null,tab:0,results:{},screen:1,qi:0,score:0,ans:null,theme:null};
+try{Object.assign(S,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const go=n=>{S.screen=n;save();render()};
+const $=h=>{document.getElementById("app").innerHTML='<div class="screen">'+h+'</div>'};
+const GR=["الأول","الثاني","الثالث","الرابع","الخامس","السادس"];
+const COLS=["#FFC93C","#2EC4B6","#FF6B6B","#8E7DFF","#FF9F5A","#7BD389"];
+
+/* ========= 3) UI ========= */
+function head(back,title){
+ const u=S.user;
+ return `<div class="flex items-center gap-3 mb-4">
+ ${back?`<button class="card w-10 h-10 text-xl" onclick="go(${back})" aria-label="رجوع">➡️</button>`:""}
+ <h1 class="flex-1 text-xl font-extrabold" dir="auto">${title}</h1>
+ ${u?`<button onclick="logout()" title="تسجيل الخروج" class="flex items-center gap-2"><span class="w-10 h-10 rounded-full grid place-items-center font-extrabold" style="background:var(--mint);color:#1F2A44">${u.name[0]}</span></button>`:""}</div>
+ ${u&&S.screen>2?`<p class="text-sm mb-3" style="color:var(--mut)">أهلاً ${u.name} • الصف ${GR[S.grade-1]||""} ${S.term?"• الفصل "+(S.term==1?"الأول":"الثاني"):""}</p>`:""}`;
+}
+function logout(){S.user=null;S.screen=1;save();render()}
+
+function render(){
+ if(S.theme)document.documentElement.dataset.theme=S.theme;
+ if(!S.user&&S.screen>1)S.screen=1;
+ [s1,s2,s3,s4,s5,s6,s7][S.screen-1]();
+}
+
+function s1(){ // Gmail sign-in (simulated)
+ $(`<div class="text-center pt-10">
+ <div class="text-7xl mb-2">🎒</div>
+ <h1 class="text-3xl font-extrabold">مدرستي</h1>
+ <p class="mb-8" style="color:var(--mut)">المنهج المصري 2027 للمرحلة الابتدائية</p>
+ <div class="card p-5 text-right">
+  <label class="font-bold text-sm">اسمك</label>
+  <input id="nm" class="w-full p-3 mt-1 mb-3 rounded-xl border-2" style="background:var(--bg);border-color:var(--line)" placeholder="مثال: أحمد">
+  <label class="font-bold text-sm">بريد Gmail</label>
+  <input id="em" dir="ltr" class="w-full p-3 mt-1 mb-4 rounded-xl border-2" style="background:var(--bg);border-color:var(--line)" placeholder="name@gmail.com">
+  <button onclick="login()" class="w-full p-3 rounded-xl font-extrabold bg-white text-black border-2 flex items-center justify-center gap-2" style="border-color:#ccc"><b style="color:#4285F4;font-size:20px">G</b> تسجيل الدخول باستخدام Google</button>
+  <p id="er" class="text-sm mt-2" style="color:var(--coral)"></p>
+ </div>
+ <p class="text-xs mt-3" style="color:var(--mut)">تسجيل دخول تجريبي محفوظ على جهازك فقط. للربط الحقيقي استبدل الدالة login() بـ Google Identity Services.</p></div>`);
+}
+function login(){
+ const n=nm.value.trim(),e=em.value.trim();
+ if(!n||!/^[^\s@]+@gmail\.com$/i.test(e)){er.textContent="اكتب اسمك وبريد Gmail صحيح (ينتهي بـ gmail.com)";return}
+ S.user={name:n,email:e};go(S.grade?2:2);
+}
+function s2(){
+ $(head(0,"اختر الصف الدراسي")+`<div class="grid grid-cols-2 gap-3">${GR.map((g,i)=>`<button class="big" style="background:${COLS[i]}" onclick="S.grade=${i+1};go(3)"><div class="text-3xl">${i+1}</div>الصف ${g} الابتدائي</button>`).join("")}</div>`);
+}
+function s3(){
+ $(head(2,"اختر الفصل الدراسي")+`<div class="grid gap-4 mt-6">
+ <button class="big" style="background:#FFC93C" onclick="S.term=1;go(4)">📘 الفصل الدراسي الأول</button>
+ <button class="big" style="background:#2EC4B6" onclick="S.term=2;go(4)">📗 الفصل الدراسي الثاني</button></div>`);
+}
+function s4(){
+ $(head(3,"اختر نوع التعليم")+`<div class="grid gap-4 mt-6">
+ <button class="big" style="background:#FF9F5A" onclick="S.track='ar';go(5)">🏫 النظام العربي</button>
+ <button class="big" style="background:#8E7DFF" onclick="S.track='lang';go(5)">🌍 لغات / تجريبي</button></div>`);
+}
+function s5(){
+ const list=DATA.subjects.filter(s=>s.tracks.includes(S.track));
+ $(head(4,"المواد الدراسية - المنهج المصري 2027")+`<div class="grid grid-cols-2 gap-3">${list.map(s=>`<button class="big" style="background:${s.color}" onclick="S.subject='${s.id}';go(6)"><div class="text-4xl">${s.icon}</div>${s.ar}<div class="text-xs font-semibold" dir="ltr">${s.en}</div></button>`).join("")}</div>
+ <div class="mt-6 flex gap-2 flex-wrap text-sm">
+ <label class="btn cursor-pointer">استيراد منهج JSON<input type="file" accept=".json" class="hidden" onchange="imp(this)"></label>
+ <button class="btn" onclick="S.theme=(S.theme=='dark'?'light':'dark');save();render()">🌓 الوضع</button></div>`);
+}
+function imp(el){
+ const f=el.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.subjects))throw 0;DATA=d;render()}catch(e){alert("ملف JSON غير صالح. تأكد من وجود subjects.")}};r.readAsText(f);
+}
+const unitsOf=s=>{const m=s.units.filter(u=>u.g==S.grade&&u.tm==S.term&&(!u.tr||u.tr==S.track));return m.length?m:s.units.filter(u=>!u.g)};
+const isReal=s=>s.units.some(u=>u.g==S.grade&&u.tm==S.term&&(!u.tr||u.tr==S.track));
+const rkey=i=>[S.subject,S.grade,S.term,S.track,i].join("_");
+const subj=()=>DATA.subjects.find(s=>s.id===S.subject);
+function s6(){
+ const s=subj();
+ $(head(5,s.icon+" "+s.ar)+`${isReal(s)?"":`<p class="card p-3 mb-3 text-sm" style="border-color:var(--coral)">⚠️ محتوى تجريبي: لم يُضف منهج هذا الصف/الفصل/النظام بعد.</p>`}<div class="grid gap-3">${unitsOf(s).map((u,i)=>{
+  const r=S.results[rkey(i)];
+  return `<button class="card p-4 text-right flex items-center gap-3" onclick="S.unit=${i};S.tab=0;S.qi=0;S.score=0;S.ans=null;go(7)">
+  <span class="w-12 h-12 rounded-2xl grid place-items-center font-extrabold text-lg shrink-0" style="background:${s.color};color:#1F2A44">${i+1}</span>
+  <span class="flex-1 font-bold" dir="${u.l=='en'?'ltr':'rtl'}" style="text-align:start">${u.t}</span>${r!=null?`<span class="text-sm font-bold" style="color:var(--mint)">${r}%</span>`:""}</button>`}).join("")}</div>`);
+}
+const TABS=["ملخص عام","شرح كامل","اختبار مكثف","فيديوهات"];
+function s7(){
+ const s=subj(),u=unitsOf(s)[S.unit];
+ let body="";
+ if(S.tab==0)body=`<ul class="grid gap-2">${u.summary.map(x=>`<li class="card p-3 flex gap-2"><span>⭐</span><span>${x}</span></li>`).join("")}</ul>`;
+ if(S.tab==1)body=`<div class="card p-4 exp">${u.explain}</div>`;
+ if(S.tab==2)body=quiz(u,s);
+ if(S.tab==3)body=`<div class="grid gap-3">${u.videos.map((v,i)=>`<a class="card p-4 flex items-center gap-3" href="${v.url}" target="_blank" rel="noopener"><span class="text-3xl">▶️</span><span class="font-bold">الدرس ${i+1}: ${v.t}</span></a>`).join("")}</div>`;
+ $(head(6,u.t)+`<div class="card p-1 flex gap-1 mb-4">${TABS.map((t,i)=>`<button class="tab ${S.tab==i?"on":""}" onclick="S.tab=${i};S.qi=0;S.score=0;S.ans=null;save();render()">${t}</button>`).join("")}</div>`+`<div dir="${u.l=='en'?'ltr':'rtl'}" style="text-align:start">${body}</div>`);
+}
+function quiz(u,s){
+ const Q=u.quiz;
+ if(S.qi>=Q.length){
+  const p=Math.round(S.score/Q.length*100);
+  S.results[rkey(S.unit)]=p;save();
+  return `<div class="card p-6 text-center"><div class="text-6xl">${p>=80?"🏆":p>=50?"👍":"💪"}</div>
+  <h2 class="text-2xl font-extrabold mt-2">نتيجتك ${S.score} من ${Q.length}</h2>
+  <p class="mt-1" style="color:var(--mut)">${p>=80?"ممتاز! أنت بطل":p>=50?"جيد، راجع الملخص وحاول مرة أخرى":"راجع الشرح الكامل ثم أعد الاختبار"}</p>
+  <button class="btn mt-4" onclick="S.qi=0;S.score=0;S.ans=null;render()">إعادة الاختبار</button></div>`;
+ }
+ const q=Q[S.qi];
+ return `<div class="card p-4"><p class="text-sm" style="color:var(--mut)">سؤال ${S.qi+1} من ${Q.length}</p>
+ <h2 class="font-extrabold text-lg my-2">${q.q}</h2>
+ ${q.o.map((o,i)=>`<button class="opt ${S.ans!=null?(i==q.a?"ok":i==S.ans?"no":""):""}" ${S.ans!=null?"disabled":""} onclick="pick(${i})">${o}</button>`).join("")}
+ ${S.ans!=null?`<p class="mt-3 font-bold">${S.ans==q.a?"✅ إجابة صحيحة!":"❌ الإجابة الصحيحة: "+q.o[q.a]}</p><button class="btn mt-3" onclick="S.qi++;S.ans=null;render()">${S.qi+1>=Q.length?"عرض النتيجة":"السؤال التالي"}</button>`:""}</div>`;
+}
+function pick(i){const q=unitsOf(subj())[S.unit].quiz[S.qi];S.ans=i;if(i==q.a)S.score++;render()}
+render();
+</script>
+</body>
+</html>

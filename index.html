@@ -4,31 +4,62 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>مدرستي - المنهج المصري 2027</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;600;800&family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 <style>
-:root{--bg:#EAF6FF;--card:#fff;--ink:#1F2A44;--mut:#5b6785;--sun:#FFC93C;--mint:#2EC4B6;--coral:#FF6B6B;--line:#d6e4f2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111a2e;--card:#1b2742;--ink:#f1f5ff;--mut:#a3b1d1;--line:#2c3b5e}}
-:root[data-theme="dark"]{--bg:#111a2e;--card:#1b2742;--ink:#f1f5ff;--mut:#a3b1d1;--line:#2c3b5e}
+:root{--bg:#F3EFFF;--card:#fff;--ink:#2A2150;--mut:#6a6590;--sun:#FFB020;--mint:#12C2A5;--coral:#FF5E7E;--acc:#6C5CE7;--line:#e3dcff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15122B;--card:#231E45;--ink:#F3F0FF;--mut:#b3add6;--line:#342d63;--acc:#8B7DFF}}
+:root[data-theme="dark"]{--bg:#15122B;--card:#231E45;--ink:#F3F0FF;--mut:#b3add6;--line:#342d63;--acc:#8B7DFF}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{font-family:'Cairo',Tahoma,sans-serif;background:var(--bg);color:var(--ink);margin:0}
+body{font-family:'Baloo Bhaijaan 2','Cairo',Tahoma,sans-serif;background:var(--bg);background-image:radial-gradient(circle at 100% 0,rgba(108,92,231,.18),transparent 45%),radial-gradient(circle at 0 100%,rgba(18,194,165,.16),transparent 40%);background-attachment:fixed;color:var(--ink);margin:0}
 #app{max-width:480px;margin:0 auto;min-height:100vh;padding:14px 16px 40px}
-.card{background:var(--card);border:2px solid var(--line);border-radius:20px}
-.big{border-radius:22px;padding:18px;font-weight:800;text-align:center;cursor:pointer;border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);transition:transform .1s,box-shadow .1s;color:#1F2A44}
-.big:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
-.btn{background:var(--ink);color:var(--bg);border-radius:14px;padding:10px 18px;font-weight:700}
-.tab{flex:1;padding:8px 2px;font-size:12px;font-weight:700;border-radius:12px;color:var(--mut)}
-.tab.on{background:var(--sun);color:#1F2A44}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 8px 24px rgba(42,33,80,.08)}
+.big{border-radius:26px;padding:20px 12px;font-weight:800;text-align:center;cursor:pointer;border:0;box-shadow:inset 0 -6px 0 rgba(0,0,0,.14),0 10px 20px rgba(42,33,80,.14);transition:transform .12s;color:#2A2150}
+.big:active{transform:scale(.96)}
+.btn{background:var(--acc);color:#fff;border-radius:16px;padding:12px 20px;font-weight:800;box-shadow:0 6px 14px rgba(108,92,231,.35)}
+.tab{flex:1;padding:9px 2px;font-size:12px;font-weight:800;border-radius:14px;color:var(--mut)}
+.tab.on{background:var(--acc);color:#fff}
+.inp{width:100%;padding:12px;margin:4px 0 12px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.hero{width:96px;height:96px;margin:0 auto 8px;border-radius:30px;display:grid;place-items:center;font-size:52px;background:linear-gradient(135deg,var(--acc),var(--mint));box-shadow:0 12px 24px rgba(108,92,231,.35)}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 :focus-visible{outline:3px solid var(--mint);outline-offset:2px}
 .screen{animation:in .25s ease}@keyframes in{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.screen{animation:none}}
 .exp{line-height:1.9;font-size:15px}.exp h3{font-weight:800;font-size:16px;margin:16px 0 4px}.exp h3:first-child{margin-top:0}.exp ul,.exp ol{padding-inline-start:20px;margin:4px 0}.exp ul{list-style:disc}.exp ol{list-style:decimal}.exp .ex{background:var(--bg);border:2px dashed var(--line);border-radius:14px;padding:10px 12px;margin:8px 0}
-.opt{display:block;width:100%;text-align:start;padding:12px;margin-top:8px;border:2px solid var(--line);border-radius:14px;font-weight:600}
+.opt{display:block;width:100%;text-align:start;padding:12px;margin-top:8px;border:2px solid var(--line);border-radius:16px;font-weight:600;background:var(--card);color:var(--ink)}
 .opt.ok{background:#c9f5e4;border-color:#1f9d6b;color:#0b3d2a}.opt.no{background:#ffd9d9;border-color:#d64545;color:#5a1111}
+[hidden]{display:none!important}
+#fab{position:fixed;inset-inline-start:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:62px;height:62px;border-radius:50%;font-size:30px;z-index:40;background:linear-gradient(135deg,var(--acc),var(--mint));box-shadow:0 10px 24px rgba(108,92,231,.45);border:3px solid #fff}
+#chat{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;max-width:480px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#cmsg{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.bub{max-width:86%;padding:10px 14px;border-radius:18px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px}
+.bub.me{align-self:flex-end;background:var(--acc);color:#fff;border-end-end-radius:4px}
+.bub.bot{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-end-start-radius:4px}
+.chip{padding:7px 12px;border-radius:999px;border:2px solid var(--line);background:var(--card);font-size:13px;font-weight:700;white-space:nowrap}
 </style>
 </head>
 <body>
 <div id="app"></div>
+<button id="fab" hidden aria-label="المساعد الذكي" onclick="chatOpen(true)">🤖</button>
+<div id="chat" hidden role="dialog" aria-label="المساعد الذكي">
+ <div class="flex items-center gap-2 p-3" style="border-bottom:1px solid var(--line)">
+  <span class="text-2xl">🤖</span><b class="flex-1 text-lg">مساعد مدرستي</b>
+  <button class="card w-10 h-10" onclick="CH=[];chatOpen(true)" aria-label="محادثة جديدة">🗑️</button>
+  <button class="card w-10 h-10" onclick="chatOpen(false)" aria-label="إغلاق">✖</button></div>
+ <div id="cmsg" aria-live="polite"></div>
+ <div class="flex gap-2 px-3 pb-2 overflow-x-auto">
+  <button class="chip" onclick="chatSend('اشرح لي الدرس الحالي ببساطة')">📖 اشرح الدرس</button>
+  <button class="chip" onclick="chatSend('اسألني سؤال تدريب على الدرس الحالي')">📝 سؤال تدريب</button>
+  <button class="chip" onclick="chatSend('ساعدني أفهم مسألة صعبة عليّ')">💡 مسألة صعبة</button></div>
+ <div class="flex gap-2 p-3" style="border-top:1px solid var(--line)">
+  <input id="cin" class="inp" style="margin:0" placeholder="اكتب سؤالك هنا…" maxlength="500" onkeydown="if(event.key=='Enter')chatSend(this.value)">
+  <button class="btn" onclick="chatSend(document.getElementById('cin').value)">إرسال</button></div>
+</div>
 <script>
 /* ========= 1) CURRICULUM DATA (JSON schema – replace or import to update) =========
  subjects[]: {id, ar, en, icon, color, tracks:["ar","lang"], units:[{t, summary[], explain, quiz:[{q,o[],a}], videos:[{t,url}]}]}
@@ -69,7 +100,7 @@ const CURRICULUM={version:"2027-sample",subjects:[
   [{q:"من سلوكيات الاحترام:",o:["السخرية","الاستماع","المقاطعة"],a:1}],["قيمة الاحترام"])]}
 ]};
 /* ===== Math - Grade 4 - Term 1 - Languages (unit titles follow the 2026/2027 MoE book; explanations & questions are authored by the assistant - please review) ===== */
-const M4=(t,s,e,q,v)=>({...U(t,s,e,q.map(([a,b,c])=>({q:a,o:b,a:c})),v),g:4,tm:1,tr:"lang",l:"en"});
+const M4=(t,s,e,q,v)=>({...U(t,s,e,q.map(([a,b,c])=>({q:a,o:b,a:c})),v),g:4,tm:1,sg:"primary",tr:"lang",l:"en"});
 CURRICULUM.subjects.find(s=>s.id=="math").units.push(
 M4("Unit 1: Place Value",
  ["Read and write numbers up to millions (ones, tens, hundreds, thousands, ten thousands, hundred thousands, millions)","Value of a digit = the digit x the value of its place","Standard form, word form and expanded form name the same number","To compare, start from the greatest place value"],
@@ -208,12 +239,15 @@ X(["Evaluate: 36 ÷ (4 + 2) × 3 − 5","Parentheses: 4 + 2 = 6. Then left to ri
 ["Find the mistake: 20 − 4 × 3 = 48","The student subtracted first (16 × 3 = 48). Multiply first: 4 × 3 = 12, then 20 − 12 = <b>8</b>."])
 ];
 CURRICULUM.subjects.find(s=>s.id=="math").units.filter(u=>u.g==4).forEach((u,i)=>u.explain+=EXTRA4[i]);
+/* ===== Extra subjects for all stages (units are added later via JSON) ===== */
+[["ss","الدراسات الاجتماعية","Social Studies","🌍","#4EA8DE"],["rel","التربية الدينية","Religion","🕌","#7BD389"],["hist","التاريخ المصري","Egyptian History","🏛️","#FF9F5A"],["phil","الفلسفة والمنطق","Philosophy & Logic","🧠","#8E7DFF"],["isci","العلوم المتكاملة","Integrated Science","⚗️","#2EC4B6"],["fl2","اللغة الأجنبية الثانية","Second Foreign Language","🗣️","#FF6B6B"],["prog","البرمجة وعلوم الحاسب","Programming & CS","💻","#4EA8DE"],["phys","الفيزياء","Physics","⚡","#FFC93C"],["chem","الكيمياء","Chemistry","🧪","#FF6B6B"],["bio","الأحياء","Biology","🧬","#7BD389"],["acc","المحاسبة","Accounting","📒","#FF9F5A"],["mgmt","إدارة الأعمال","Business Management","💼","#8E7DFF"],["econ","الاقتصاد","Economics","📈","#2EC4B6"],["psy","علم النفس","Psychology","🧩","#FF6B6B"],["stat","الإحصاء","Statistics","📊","#4EA8DE"],["geo","الجغرافيا","Geography","🗺️","#7BD389"]].forEach(([id,ar,en,icon,color])=>CURRICULUM.subjects.push({id,ar,en,icon,color,units:[]}));
 let DATA=CURRICULUM;
 
 /* ========= 2) STATE (LocalStorage) ========= */
 const K="egy_app_v1";
 let S={user:null,grade:null,term:null,track:null,subject:null,unit:null,tab:0,results:{},screen:1,qi:0,score:0,ans:null,theme:null};
 try{Object.assign(S,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+if(!S.stage&&S.grade)S.stage="primary";
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
 const go=n=>{S.screen=n;save();render()};
 const $=h=>{document.getElementById("app").innerHTML='<div class="screen">'+h+'</div>'};
@@ -227,67 +261,172 @@ function head(back,title){
  ${back?`<button class="card w-10 h-10 text-xl" onclick="go(${back})" aria-label="رجوع">➡️</button>`:""}
  <h1 class="flex-1 text-xl font-extrabold" dir="auto">${title}</h1>
  ${u?`<button onclick="logout()" title="تسجيل الخروج" class="flex items-center gap-2"><span class="w-10 h-10 rounded-full grid place-items-center font-extrabold" style="background:var(--mint);color:#1F2A44">${u.name[0]}</span></button>`:""}</div>
- ${u&&S.screen>2?`<p class="text-sm mb-3" style="color:var(--mut)">أهلاً ${u.name} • الصف ${GR[S.grade-1]||""} ${S.term?"• الفصل "+(S.term==1?"الأول":"الثاني"):""}</p>`:""}`;
+ ${u&&S.screen>2&&S.screen!=9?`<p class="text-sm mb-3" style="color:var(--mut)">أهلاً ${u.name} ${S.grade?"• "+gl():""} ${S.term?"• الفصل "+(S.term==1?"الأول":"الثاني"):""}</p>`:""}`;
 }
-function logout(){S.user=null;S.screen=1;save();render()}
+async function logout(){CH=[];chatOpen(false);try{if(FB)await FB.auth.signOut()}catch(e){}S.user=null;S.screen=1;save();render()}
 
 function render(){
  if(S.theme)document.documentElement.dataset.theme=S.theme;
  if(!S.user&&S.screen>1)S.screen=1;
- [s1,s2,s3,s4,s5,s6,s7][S.screen-1]();
+ if(stopAdmin){stopAdmin();stopAdmin=null}
+ [s1,s2,s3,s4,s5,s6,s7,s8,s9][S.screen-1]();chatUi();
 }
 
-function s1(){ // Gmail sign-in (simulated)
- $(`<div class="text-center pt-10">
- <div class="text-7xl mb-2">🎒</div>
- <h1 class="text-3xl font-extrabold">مدرستي</h1>
- <p class="mb-8" style="color:var(--mut)">المنهج المصري 2027 للمرحلة الابتدائية</p>
- <div class="card p-5 text-right">
-  <label class="font-bold text-sm">اسمك</label>
-  <input id="nm" class="w-full p-3 mt-1 mb-3 rounded-xl border-2" style="background:var(--bg);border-color:var(--line)" placeholder="مثال: أحمد">
-  <label class="font-bold text-sm">بريد Gmail</label>
-  <input id="em" dir="ltr" class="w-full p-3 mt-1 mb-4 rounded-xl border-2" style="background:var(--bg);border-color:var(--line)" placeholder="name@gmail.com">
-  <button onclick="login()" class="w-full p-3 rounded-xl font-extrabold bg-white text-black border-2 flex items-center justify-center gap-2" style="border-color:#ccc"><b style="color:#4285F4;font-size:20px">G</b> تسجيل الدخول باستخدام Google</button>
-  <p id="er" class="text-sm mt-2" style="color:var(--coral)"></p>
- </div>
- <p class="text-xs mt-3" style="color:var(--mut)">تسجيل دخول تجريبي محفوظ على جهازك فقط. للربط الحقيقي استبدل الدالة login() بـ Google Identity Services.</p></div>`);
+/* ========= FIREBASE: Auth (Google + Email/Password), Firestore (users), Realtime DB (online presence) ========= */
+const FIREBASE_CONFIG=null; // <-- الصق هنا إعدادات مشروع Firebase (انظر الشرح)
+const ADMIN_EMAILS=[]; // <-- مثال: ["your@gmail.com"]  (المشرفون فقط يرون لوحة الإحصائيات)
+let FB=null,MODE="in";
+const FBOK=()=>!!(FIREBASE_CONFIG&&window.firebase);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const isAdmin=()=>!!(S.user&&ADMIN_EMAILS.map(e=>e.toLowerCase()).includes((S.user.email||"").toLowerCase()));
+const msg=t=>{const e=document.getElementById("er");if(e)e.textContent=t};
+const AERR={"auth/invalid-credential":"البريد أو كلمة المرور غير صحيحة","auth/wrong-password":"كلمة المرور غير صحيحة","auth/user-not-found":"لا يوجد حساب بهذا البريد","auth/email-already-in-use":"هذا البريد مسجل بالفعل","auth/weak-password":"كلمة المرور ضعيفة (6 أحرف على الأقل)","auth/invalid-email":"البريد غير صحيح","auth/popup-closed-by-user":"تم إغلاق نافذة Google","auth/too-many-requests":"محاولات كثيرة، حاول لاحقاً"};
+function fbInit(){
+ if(!FBOK())return;
+ firebase.initializeApp(FIREBASE_CONFIG);
+ FB={auth:firebase.auth(),db:firebase.firestore(),rt:firebase.database()};
+ FB.auth.onAuthStateChanged(async u=>{
+  if(!u){S.user=null;S.screen=1;save();render();return}
+  S.user={uid:u.uid,name:u.displayName||(u.email||"طالب").split("@")[0],email:u.email};
+  try{
+   const r=FB.db.collection("users").doc(u.uid),sn=await r.get(),T=firebase.firestore.FieldValue.serverTimestamp();
+   await r.set(Object.assign({name:S.user.name,email:u.email,lastLogin:T},sn.exists?{}:{createdAt:T}),{merge:true});
+  }catch(e){}
+  startPresence(u.uid);
+  if(S.screen==1)S.screen=9;save();render();
+ });
 }
-function login(){
- const n=nm.value.trim(),e=em.value.trim();
- if(!n||!/^[^\s@]+@gmail\.com$/i.test(e)){er.textContent="اكتب اسمك وبريد Gmail صحيح (ينتهي بـ gmail.com)";return}
- S.user={name:n,email:e};go(S.grade?2:2);
+function startPresence(uid){
+ const ref=FB.rt.ref("status/"+uid),TS=firebase.database.ServerValue.TIMESTAMP;
+ FB.rt.ref(".info/connected").on("value",s=>{
+  if(!s.val())return;
+  ref.onDisconnect().set({online:false,ts:TS}).then(()=>ref.set({online:true,ts:TS}));
+ });
+}
+function demoUsers(){try{return JSON.parse(localStorage.getItem("egy_demo_users")||"{}")}catch(e){return{}}}
+async function doAuth(){
+ const g=id=>((document.getElementById(id)||{}).value||"").trim();
+ const n=g("nm"),e=g("em").toLowerCase(),p=(document.getElementById("pw")||{}).value||"";
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return msg("اكتب بريداً صحيحاً");
+ if(p.length<6)return msg("كلمة المرور 6 أحرف على الأقل");
+ if(MODE=="up"&&!n)return msg("اكتب اسمك");
+ if(!FBOK()){ // demo mode (local only, NOT secure)
+  const U=demoUsers();
+  if(MODE=="up"){if(U[e])return msg("هذا البريد مسجل بالفعل");U[e]={name:n,pw:btoa(unescape(encodeURIComponent(p)))};try{localStorage.setItem("egy_demo_users",JSON.stringify(U))}catch(x){}}
+  else if(!U[e]||U[e].pw!==btoa(unescape(encodeURIComponent(p))))return msg("البريد أو كلمة المرور غير صحيحة");
+  S.user={uid:e,name:U[e].name,email:e};return go(9);
+ }
+ try{
+  if(MODE=="up"){
+   const c=await FB.auth.createUserWithEmailAndPassword(e,p);
+   await c.user.updateProfile({displayName:n});
+   await FB.db.collection("users").doc(c.user.uid).set({name:n},{merge:true});
+   S.user.name=n;save();render();
+  }else await FB.auth.signInWithEmailAndPassword(e,p);
+ }catch(x){msg(AERR[x.code]||"حدث خطأ، حاول مرة أخرى")}
+}
+async function googleLogin(){
+ if(!FBOK())return msg("تسجيل Google الحقيقي يحتاج ربط Firebase (انظر الشرح)");
+ try{await FB.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())}catch(x){msg(AERR[x.code]||"تعذر تسجيل الدخول بـ Google")}
+}
+async function resetPw(){
+ const e=((document.getElementById("em")||{}).value||"").trim();
+ if(!e)return msg("اكتب بريدك أولاً ثم اضغط «نسيت كلمة المرور»");
+ if(!FBOK())return msg("استعادة كلمة المرور تعمل بعد ربط Firebase");
+ try{await FB.auth.sendPasswordResetEmail(e);msg("تم إرسال رابط إعادة التعيين إلى بريدك")}catch(x){msg(AERR[x.code]||"تعذر الإرسال")}
+}
+function s1(){
+ $(`<div class="text-center pt-6"><div class="hero">🎒</div>
+ <h1 class="text-3xl font-extrabold">مدرستي</h1>
+ <p style="color:var(--mut)">المنهج المصري 2027 للمرحلة الابتدائية</p>
+ <div class="card p-5 text-right mt-6">
+  <div class="flex gap-1 mb-4 p-1 rounded-2xl" style="background:var(--bg)">
+   <button class="tab ${MODE=="in"?"on":""}" onclick="MODE='in';render()">تسجيل الدخول</button>
+   <button class="tab ${MODE=="up"?"on":""}" onclick="MODE='up';render()">حساب جديد</button></div>
+  ${MODE=="up"?'<label class="font-bold text-sm">الاسم</label><input id="nm" class="inp" placeholder="مثال: أحمد" autocomplete="name">':""}
+  <label class="font-bold text-sm">البريد الإلكتروني</label>
+  <input id="em" dir="ltr" type="email" class="inp" placeholder="name@gmail.com" autocomplete="email">
+  <label class="font-bold text-sm">كلمة المرور</label>
+  <input id="pw" dir="ltr" type="password" class="inp" placeholder="6 أحرف على الأقل" autocomplete="${MODE=="up"?"new-password":"current-password"}">
+  <button onclick="doAuth()" class="btn w-full">${MODE=="up"?"إنشاء الحساب":"دخول"}</button>
+  <div class="text-center text-sm my-3" style="color:var(--mut)">أو</div>
+  <button onclick="googleLogin()" class="w-full p-3 rounded-2xl font-extrabold bg-white text-black border-2 flex items-center justify-center gap-2" style="border-color:#ddd"><b style="color:#4285F4;font-size:20px">G</b> المتابعة بحساب Google</button>
+  <p id="er" class="text-sm mt-3 text-center" style="color:var(--coral)" role="alert"></p>
+  <button onclick="resetPw()" class="text-sm block mx-auto underline" style="color:var(--mut)">نسيت كلمة المرور؟</button>
+ </div>
+ ${FBOK()?"":'<p class="text-xs mt-4 card p-3" style="border-color:var(--coral)">⚠️ وضع تجريبي: الحسابات محفوظة على هذا الجهاز فقط وليست آمنة. اربط Firebase للحسابات الحقيقية وعدّاد المستخدمين.</p>'}</div>`);
+}
+let stopAdmin=null;
+function s8(){
+ const T=head(5,"لوحة المشرف");
+ if(!isAdmin()||!FB){$(T+`<p class="card p-4">لوحة المشرف تعمل بعد ربط Firebase وإضافة بريدك في ADMIN_EMAILS.</p>`);return}
+ $(T+`<div class="grid grid-cols-2 gap-3 mb-4">
+  <div class="card p-4 text-center"><div class="text-4xl font-extrabold" id="cTot">…</div><div class="text-sm">إجمالي المستخدمين</div></div>
+  <div class="card p-4 text-center"><div class="text-4xl font-extrabold" style="color:var(--mint)" id="cOn">…</div><div class="text-sm">أونلاين الآن</div></div></div>
+  <div id="ul" class="grid gap-2"></div>`);
+ let users=[],st={};
+ const draw=()=>{
+  document.getElementById("cTot").textContent=users.length;
+  document.getElementById("cOn").textContent=Object.values(st).filter(x=>x&&x.online).length;
+  document.getElementById("ul").innerHTML=users.map(u=>`<div class="card p-3 flex items-center gap-3"><span class="dot" style="background:${st[u.id]&&st[u.id].online?"var(--mint)":"#9aa3b8"}"></span><div class="flex-1"><b>${esc(u.name)}</b><div class="text-xs" dir="ltr" style="color:var(--mut)">${esc(u.email)}</div></div></div>`).join("");
+ };
+ const u1=FB.db.collection("users").onSnapshot(s=>{users=s.docs.map(d=>Object.assign({id:d.id},d.data()));draw()},()=>{});
+ const r=FB.rt.ref("status");r.on("value",s=>{st=s.val()||{};draw()},()=>{});
+ stopAdmin=()=>{u1();r.off()};
+}
+const STAGES=[{k:"primary",ar:"المرحلة الابتدائية",suf:"الابتدائي",n:6,icon:"🎒",c:"#FFC93C"},{k:"prep",ar:"المرحلة الإعدادية",suf:"الإعدادي",n:3,icon:"📚",c:"#2EC4B6"},{k:"sec",ar:"المرحلة الثانوية",suf:"الثانوي",n:3,icon:"🎓",c:"#8E7DFF"}];
+const STG=()=>STAGES.find(x=>x.k==S.stage)||STAGES[0];
+const gl=()=>"الصف "+GR[S.grade-1]+" "+STG().suf;
+const PATHS={med:["الطب وعلوم الحياة","🧬","#FF6B6B"],eng:["الهندسة وعلوم الحاسب","💻","#4EA8DE"],biz:["الأعمال","💼","#FF9F5A"],arts:["الآداب والفنون","🎨","#8E7DFF"]};
+/* أسماء المواد في مدارس اللغات التجريبي كما تظهر على كتبهم */
+const LN={math:["Mathematics","الماث"],sci:["Science","الساينس"],disc:["Discover","ديسكفر"],ict:["ICT","تكنولوجيا المعلومات"],en:["English","اللغة الإنجليزية"]};
+const sn=s=>{const x=S.track=="lang"&&LN[s.id];return x?{a:(s.id=="en"&&S.stage=="primary")?"English (Connect)":x[0],b:x[1]}:{a:s.ar,b:s.en}};
+/* خطة المواد لكل مرحلة/صف/مسار (مبنية على قرارات الوزارة المنشورة 2026/2027) */
+function planFor(){
+ const g=S.grade;
+ if(S.stage=="primary")return g<=3?["ar","math","en","disc","val","rel"]:["ar","math","sci","ss","en","val","ict","rel"];
+ if(S.stage=="prep")return["ar","en","math","sci","ss","ict","rel"];
+ if(g==1)return["ar","hist","math","isci","phil","en","rel","fl2","prog"];
+ const P={med:[["ar","en","hist","math","phys","rel"],["chem","bio","rel"]],eng:[["ar","en","hist","chem","prog","rel"],["math","phys","rel"]],biz:[["ar","en","hist","acc","mgmt","rel"],["econ","math","rel"]],arts:[["ar","en","hist","psy","fl2","rel"],["stat","geo","rel"]]};
+ return (P[S.track]||P.med)[g-2];
+}
+function afterTerm(){if(S.stage=="sec"&&S.grade==1){S.track="common";go(5)}else go(4)}
+function s9(){
+ $(head(0,"اختر المرحلة الدراسية")+`<div class="grid gap-4 mt-4">${STAGES.map(x=>`<button class="big flex items-center gap-4 justify-center" style="background:${x.c}" onclick="S.stage='${x.k}';S.grade=null;S.term=null;S.track=null;go(2)"><span class="text-4xl">${x.icon}</span><span class="text-xl">${x.ar}</span></button>`).join("")}</div>`);
 }
 function s2(){
- $(head(0,"اختر الصف الدراسي")+`<div class="grid grid-cols-2 gap-3">${GR.map((g,i)=>`<button class="big" style="background:${COLS[i]}" onclick="S.grade=${i+1};go(3)"><div class="text-3xl">${i+1}</div>الصف ${g} الابتدائي</button>`).join("")}</div>`);
+ const t=STG();
+ $(head(9,"اختر الصف الدراسي")+`<p class="mb-3 font-bold" style="color:var(--mut)">${t.icon} ${t.ar}</p><div class="grid grid-cols-2 gap-3">${Array.from({length:t.n},(_,i)=>`<button class="big" style="background:${COLS[i]}" onclick="S.grade=${i+1};S.track=null;go(3)"><div class="text-3xl">${i+1}</div>الصف ${GR[i]} ${t.suf}</button>`).join("")}</div>`);
 }
 function s3(){
  $(head(2,"اختر الفصل الدراسي")+`<div class="grid gap-4 mt-6">
- <button class="big" style="background:#FFC93C" onclick="S.term=1;go(4)">📘 الفصل الدراسي الأول</button>
- <button class="big" style="background:#2EC4B6" onclick="S.term=2;go(4)">📗 الفصل الدراسي الثاني</button></div>`);
+ <button class="big" style="background:#FFC93C" onclick="S.term=1;afterTerm()">📘 الفصل الدراسي الأول</button>
+ <button class="big" style="background:#2EC4B6" onclick="S.term=2;afterTerm()">📗 الفصل الدراسي الثاني</button></div>`);
 }
 function s4(){
+ if(S.stage=="sec")return $(head(3,"اختر المسار (البكالوريا المصرية)")+`<div class="grid grid-cols-2 gap-3 mt-4">${Object.keys(PATHS).map(k=>`<button class="big" style="background:${PATHS[k][2]}" onclick="S.track='${k}';go(5)"><div class="text-4xl">${PATHS[k][1]}</div>${PATHS[k][0]}</button>`).join("")}</div><p class="text-xs mt-4" style="color:var(--mut)">ملاحظة: مواد الثانوية العامة (النظام القديم) غير مضافة بعد.</p>`);
  $(head(3,"اختر نوع التعليم")+`<div class="grid gap-4 mt-6">
  <button class="big" style="background:#FF9F5A" onclick="S.track='ar';go(5)">🏫 النظام العربي</button>
  <button class="big" style="background:#8E7DFF" onclick="S.track='lang';go(5)">🌍 لغات / تجريبي</button></div>`);
 }
 function s5(){
- const list=DATA.subjects.filter(s=>s.tracks.includes(S.track));
- $(head(4,"المواد الدراسية - المنهج المصري 2027")+`<div class="grid grid-cols-2 gap-3">${list.map(s=>`<button class="big" style="background:${s.color}" onclick="S.subject='${s.id}';go(6)"><div class="text-4xl">${s.icon}</div>${s.ar}<div class="text-xs font-semibold" dir="ltr">${s.en}</div></button>`).join("")}</div>
+ const list=planFor().map(id=>DATA.subjects.find(s=>s.id==id)).filter(Boolean);
+ $(head(S.stage=="sec"&&S.grade==1?3:4,"مواد "+gl()+" - 2027")+`<div class="grid grid-cols-2 gap-3">${list.map(s=>`<button class="big" style="background:${s.color}" onclick="S.subject='${s.id}';go(6)"><div class="text-4xl">${s.icon}</div>${sn(s).a}<div class="text-xs font-semibold" dir="auto">${sn(s).b}</div>${unitsOf(s).length?"":'<div class="text-xs mt-1" style="opacity:.7">قريباً</div>'}</button>`).join("")}</div>
  <div class="mt-6 flex gap-2 flex-wrap text-sm">
  <label class="btn cursor-pointer">استيراد منهج JSON<input type="file" accept=".json" class="hidden" onchange="imp(this)"></label>
- <button class="btn" onclick="S.theme=(S.theme=='dark'?'light':'dark');save();render()">🌓 الوضع</button></div>`);
+ <button class="btn" onclick="S.theme=(S.theme=='dark'?'light':'dark');save();render()">🌓 الوضع</button>${isAdmin()?`<button class="btn" onclick="go(8)">📊 لوحة المشرف</button>`:""}</div>`);
 }
 function imp(el){
  const f=el.files[0];if(!f)return;const r=new FileReader();
  r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.subjects))throw 0;DATA=d;render()}catch(e){alert("ملف JSON غير صالح. تأكد من وجود subjects.")}};r.readAsText(f);
 }
-const unitsOf=s=>{const m=s.units.filter(u=>u.g==S.grade&&u.tm==S.term&&(!u.tr||u.tr==S.track));return m.length?m:s.units.filter(u=>!u.g)};
+const unitsOf=s=>s.units.filter(u=>u.g==S.grade&&u.tm==S.term&&(u.sg||"primary")==S.stage&&(!u.tr||u.tr==S.track));
 const isReal=s=>s.units.some(u=>u.g==S.grade&&u.tm==S.term&&(!u.tr||u.tr==S.track));
-const rkey=i=>[S.subject,S.grade,S.term,S.track,i].join("_");
+const rkey=i=>[S.stage,S.subject,S.grade,S.term,S.track,i].join("_");
 const subj=()=>DATA.subjects.find(s=>s.id===S.subject);
 function s6(){
  const s=subj();
- $(head(5,s.icon+" "+s.ar)+`${isReal(s)?"":`<p class="card p-3 mb-3 text-sm" style="border-color:var(--coral)">⚠️ محتوى تجريبي: لم يُضف منهج هذا الصف/الفصل/النظام بعد.</p>`}<div class="grid gap-3">${unitsOf(s).map((u,i)=>{
+ $(head(5,s.icon+" "+sn(s).a)+`<div class="grid gap-3">${unitsOf(s).length?"":`<p class="card p-4 text-sm">لم تُضف وحدات هذه المادة لهذا الصف/الفصل بعد. يمكن إضافتها من «استيراد منهج JSON».</p>`}${unitsOf(s).map((u,i)=>{
   const r=S.results[rkey(i)];
   return `<button class="card p-4 text-right flex items-center gap-3" onclick="S.unit=${i};S.tab=0;S.qi=0;S.score=0;S.ans=null;go(7)">
   <span class="w-12 h-12 rounded-2xl grid place-items-center font-extrabold text-lg shrink-0" style="background:${s.color};color:#1F2A44">${i+1}</span>
@@ -320,7 +459,58 @@ function quiz(u,s){
  ${S.ans!=null?`<p class="mt-3 font-bold">${S.ans==q.a?"✅ إجابة صحيحة!":"❌ الإجابة الصحيحة: "+q.o[q.a]}</p><button class="btn mt-3" onclick="S.qi++;S.ans=null;render()">${S.qi+1>=Q.length?"عرض النتيجة":"السؤال التالي"}</button>`:""}</div>`;
 }
 function pick(i){const q=unitsOf(subj())[S.unit].quiz[S.qi];S.ans=i;if(i==q.a)S.score++;render()}
-render();
+/* ========= AI TUTOR (مساعد ذكي) ========= */
+/* --- Gemini API ---
+ ضع مفتاحك من Google AI Studio هنا. تحذير: أي مفتاح داخل التطبيق يمكن استخراجه، لذلك قيّده (Application restrictions + حد يومي) أو استخدم CHAT_ENDPOINT كوسيط آمن. */
+const GEMINI_API_KEY="";
+const GEMINI_MODEL="gemini-3.5-flash"; // غيّره إذا لم يكن متاحاً لحسابك (مثل gemini-2.5-flash)
+async function geminiAsk(raw,ctx){
+ const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+GEMINI_MODEL+":generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":GEMINI_API_KEY},
+  body:JSON.stringify({systemInstruction:{parts:[{text:INSTR+"\n\nسياق الطالب: "+ctx}]},contents:raw.map(x=>({role:x.role=="user"?"user":"model",parts:[{text:x.content}]})),generationConfig:{maxOutputTokens:1500,temperature:0.6}})});
+ const j=await r.json().catch(()=>({}));
+ if(!r.ok)throw{code:r.status==429?"rate_limited":"gemini_"+r.status};
+ const t=((j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)||[]).map(x=>x.text||"").join("");
+ if(!t)throw{code:"empty"};
+ return t;
+}
+const CHAT_ENDPOINT=""; // اختياري للتطبيق المستقل: رابط خادمك الذي يستدعي Claude (لا تضع مفتاح API داخل التطبيق)
+let CH=[],chBusy=false;
+const INSTR="أنت «مساعد مدرستي»: مساعد تعليمي ودود لطلاب المنهج المصري (ابتدائي/إعدادي/ثانوي). أجب بنفس لغة الطالب (عربية مبسطة، أو إنجليزية إذا كتب بها). اشرح خطوة بخطوة بأسلوب يناسب عمر الطالب مع مثال قصير، وشجّعه، ولا تكتفِ بالحل النهائي بل وضّح الطريقة. التزم بالموضوعات الدراسية، وإن سأل عن شيء خارجها فأجب باختصار ثم أعده للدراسة. لا تطلب أي بيانات شخصية. اجعل الرد أقل من 150 كلمة، نصاً عادياً بدون رموز تنسيق مثل ** أو #.";
+function chatCtx(){
+ let c=STG().ar+(S.grade?" - "+gl():"")+(S.term?" - الفصل "+(S.term==1?"الأول":"الثاني"):"")+".";
+ try{if(S.screen>=6&&S.subject){const s=subj();c+=" المادة: "+sn(s).a+".";if(S.screen==7){const u=unitsOf(s)[S.unit];if(u)c+=" الوحدة: "+u.t+". ملخص: "+u.summary.join("؛ ")+"."}}}catch(e){}
+ return c;
+}
+function chatUi(){const f=document.getElementById("fab");if(f)f.hidden=!(S.user&&S.screen!=1)}
+function chatOpen(o){
+ document.getElementById("chat").hidden=!o;
+ if(o){if(!CH.length)CH.push({role:"assistant",content:"أهلاً "+(S.user?S.user.name:"")+"! أنا مساعدك الذكي 🤖 اسألني عن أي درس، أو اضغط على أحد الأزرار بالأسفل."});chatDraw();setTimeout(()=>document.getElementById("cin").focus(),60)}
+}
+function chatDraw(){
+ const m=document.getElementById("cmsg");m.textContent="";
+ CH.forEach(x=>{const d=document.createElement("div");d.className="bub "+(x.role=="user"?"me":"bot");d.textContent=x.content;m.appendChild(d)});
+ m.scrollTop=m.scrollHeight;
+}
+async function chatSend(t){
+ t=(t||"").trim();if(!t||chBusy)return;
+ document.getElementById("cin").value="";
+ CH.push({role:"user",content:t});
+ const bot={role:"assistant",content:"جارٍ التفكير…"};CH.push(bot);chatDraw();chBusy=true;
+ let hist=CH.slice(0,-1).slice(-9);while(hist.length&&hist[0].role!="user")hist.shift();
+ const ctx=chatCtx(),msgs=hist.map(x=>({role:x.role,content:x.content}));
+ const raw=msgs.map(x=>({role:x.role,content:x.content}));
+ msgs[msgs.length-1].content=INSTR+"\n\nسياق الطالب: "+ctx+"\n\nرسالة الطالب:\n"+t;
+ try{
+  let smp=null;try{smp=window.claude&&window.claude.use?await window.claude.use("sample"):null}catch(e){}
+  if(GEMINI_API_KEY){bot.content=await geminiAsk(raw,ctx)}
+  else if(smp){const r=await smp(msgs,{modelTier:"quick",cache:false,onText:({text})=>{bot.content=text;chatDraw()}});bot.content=r.text||bot.content}
+  else if(CHAT_ENDPOINT){const r=await fetch(CHAT_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:msgs,context:ctx})});const j=await r.json();bot.content=j.text||"لم أستطع الرد الآن."}
+  else bot.content="المساعد غير مفعّل: ضع GEMINI_API_KEY (أو CHAT_ENDPOINT) في الكود.";
+ }catch(e){bot.content=e&&String(e.code).startsWith("gemini_")?"تعذر الاتصال بـ Gemini (رمز "+e.code.slice(7)+"). تأكد من المفتاح واسم النموذج.":e&&e.code=="empty"?"لم يصل رد من Gemini، حاول مرة أخرى.":e&&e.code=="not_granted"?"لم تسمح باستخدام المساعد. أعد المحاولة ووافق عند الطلب.":e&&e.code=="rate_limited"?"المساعد مشغول، حاول بعد لحظات.":"حدث خطأ، حاول مرة أخرى."}
+ chBusy=false;chatDraw();
+}
+document.addEventListener("keydown",e=>{if(e.key=="Escape")chatOpen(false)});
+fbInit();render();
 </script>
 </body>
 </html>
